@@ -1,55 +1,96 @@
-import clsx from 'clsx';
-import Heading from '@theme/Heading';
-import styles from './styles.module.css';
+import clsx from "clsx";
+import Heading from "@theme/Heading";
+import styles from "./styles.module.css";
+import Link from "@docusaurus/Link";
+import ExternalLinkIcon from "@docusaurus/theme-classic/lib/theme/Icon/ExternalLink";
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
   description: JSX.Element;
+  cta?: {
+    title: string;
+    url: string;
+  };
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: "Enhanced Security",
+    // Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Passkeys eliminate the need for traditional passwords, reducing the risk
+        of phishing, brute-force attacks, and other security threats.
       </>
     ),
+    cta: {
+      title: "FidoAlliance",
+      url: "https://fidoalliance.org/passkeys/",
+    },
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: "Increased Convenience",
+    // Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        With passkeys, you can log in to your accounts using biometric
+        authentication or other secure methods, making the process faster and
+        more convenient.
       </>
     ),
+    cta: {
+      title: "Run your own",
+      url: "/docs/getting-started",
+    },
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: "Improved User Experience",
+    // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        No more remembering complex passwords or dealing with password resets.
+        Passkeys provide a seamless and hassle-free login experience.
       </>
     ),
+    cta: {
+      title: "Give it a go",
+      url: "https://example.stupidwebauthn.site/",
+    },
+  },
+  {
+    title: "Reduced Costs",
+    // Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    description: (
+      <>
+        Passwordless authentication can reduce the costs associated with
+        password management and support, freeing up resources for other
+        important tasks.
+      </>
+    ),
+    cta: {
+      title: "Running on a € 0,95 vps",
+      url: "https://webdock.io/en/pricing?variant=intel_vps&profile=webdocknano4-2023#details",
+    },
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({ title, description, cta }: FeatureItem) {
+  const isExternalLink = cta?.url.startsWith("http") || false;
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
+    <div className={clsx("col col--6")}>
+      <div className="text--center padding-horiz--md  padding-bottom--md">
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
+        {cta ? (
+          <Link
+            className="button button--secondary"
+            target={isExternalLink ? "_blank" : undefined}
+            to={cta.url}
+          >
+            {cta.title}
+            {isExternalLink ? <ExternalLinkIcon /> : null}
+          </Link>
+        ) : null}
       </div>
     </div>
   );
