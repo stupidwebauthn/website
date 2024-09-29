@@ -2,6 +2,11 @@ import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
+const npm2yarnOptions = {
+  sync: true,
+  converters: ["yarn", "pnpm", "bun"],
+};
+
 const config: Config = {
   title: "Stupid Webauthn",
   tagline: "Stupid Simple Passwordless Authentication",
@@ -44,6 +49,9 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
+          remarkPlugins: [
+            [require("@docusaurus/remark-plugin-npm2yarn"), npm2yarnOptions],
+          ],
         },
         blog: {
           showReadingTime: true,
@@ -55,6 +63,9 @@ const config: Config = {
           onInlineTags: "warn",
           onInlineAuthors: "warn",
           onUntruncatedBlogPosts: "warn",
+          remarkPlugins: [
+            [require("@docusaurus/remark-plugin-npm2yarn"), npm2yarnOptions],
+          ],
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -83,7 +94,7 @@ const config: Config = {
           position: "left",
           label: "Docs",
         },
-        { to: "/blog", label: "Changelog", position: "left" },
+        { to: "/blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/stupidwebauthn",
           label: "GitHub",
@@ -102,7 +113,7 @@ const config: Config = {
               to: "/docs/intro",
             },
             {
-              label: "Changelog",
+              label: "Blog",
               to: "/blog",
             },
           ],

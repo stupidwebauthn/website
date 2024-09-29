@@ -1,0 +1,7 @@
+{
+  "label": "Run in production",
+  "link": {
+    "type": "generated-index",
+    "description": "Install the StupidWebauthn to your production server"
+  }
+}
