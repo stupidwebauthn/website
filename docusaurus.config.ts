@@ -29,6 +29,15 @@ const config: Config = {
     locales: ["en"],
   },
 
+  scripts: [
+    {
+      defer: true,
+      src: "https://cloud.umami.is/script.js",
+      "data-website-id": "12283d28-13c4-48f5-87bf-0f265a9e0d39",
+      "data-domains": "stupidwebauthn.site",
+    },
+  ],
+
   presets: [
     [
       "classic",
@@ -72,9 +81,9 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "Docs",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        { to: "/blog", label: "Changelog", position: "left" },
         {
           href: "https://github.com/stupidwebauthn",
           label: "GitHub",
@@ -89,11 +98,11 @@ const config: Config = {
           title: "Pages",
           items: [
             {
-              label: "Tutorial",
+              label: "Docs",
               to: "/docs/intro",
             },
             {
-              label: "Blog",
+              label: "Changelog",
               to: "/blog",
             },
           ],
