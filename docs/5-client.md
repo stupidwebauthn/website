@@ -1,6 +1,6 @@
 # Client npm package
 
-> <a href="" target="_blank">**stupidwebauthn-client <img width="20" src="https://static-production.npmjs.com/255a118f56f5346b97e56325a1217a16.svg"/>**</a>
+> <a data-umami-event="Go to npm package" href="https://www.npmjs.com/package/stupidwebauthn-client" target="_blank">**stupidwebauthn-client <img width="20" src="https://static-production.npmjs.com/255a118f56f5346b97e56325a1217a16.svg"/>**</a>
 >
 > <span class="text--success">Public</span> • MIT License
 
@@ -23,11 +23,9 @@ const client = new StupidWebauthnClient();
 ```
 
 ```ts
-e.preventDefault();
 const email = e.target.email.value;
-client.Register1EmailChallenge(email).then(() => {
-  // send email
-});
+await client.Register1EmailChallenge(email);
+// send email
 ```
 
 Run on opening at the validation link:
@@ -37,24 +35,19 @@ import queryString from "query-string";
 
 const params = queryString.parse(location.search) as { c?: string };
 // check if step 3
-if (params.c) {
-  // validating email
-  client.Register2EmailValidate(params.c).then(() => {
-    // email registered successfully
-  });
-}
+if (!params.c) throw "Invalid email verification url provided";
+// validating email
+await client.Register2EmailValidate(params.c);
+// email registered successfully
 ```
 
 ### Register passkey
 
 ```ts
-client.Register3PasskeyChallenge().then((res) =>
-  client.Register4AuthorizePasskey(res.challenge).then((res2) =>
-    client.Register5PasskeyValidate(res2).then(() => {
-      // passkey authenticated
-    })
-  )
-);
+const res1 = await client.Register3PasskeyChallenge();
+const res2 = await client.Register4AuthorizePasskey(res1.challenge);
+await client.Register5PasskeyValidate(res2);
+// passkey authenticated
 ```
 
 ### Login
@@ -65,38 +58,51 @@ client.Register3PasskeyChallenge().then((res) =>
 </form>
 ```
 
-```
-e.preventDefault();
-const email = e.target.email.value;
-client.Login1Challenge(email).then((res) => {
-  // save these elsewhere
-  const challenge: string = res.challenge
-  const credentials: CredentialSelect[] = res.credentials
-});
-```
+On form submission:
 
 ```ts
-client.Register3PasskeyChallenge().then((res) =>
-  client.Register4AuthorizePasskey(res.challenge).then((res2) =>
-    client.Register5PasskeyValidate(res2).then(() => {
-      // authenticated
-    })
-  )
-);
+const email = e.target.email.value;
+const res = await client.Login1Challenge(email);
+// save these elsewhere
+const challenge: string = res.challenge;
+// list the credentials for the user to select
+const credentials: CredentialSelect[] = res.credentials;
+```
+
+```jsx
+<select>
+  {credentials.map((credential) => (
+    <option key={credential.id} value={credential.id}>
+      {credential.name}
+    </option>
+  ))}
+</select>
+```
+
+On credential selection:
+
+```ts
+const res = await client.Login2Authenticate(challenge.challenge, credentials);
+await client.Login3Validate(res, credential.challenge.id);
+// authenticated
 ```
 
 ### Authentication
 
 ```ts
-client.AuthValidate().catch(() => {
-  // navigate back to the login page
-});
+client
+  .AuthValidate()
+  .then(() => {
+    // is authenticated
+  })
+  .catch((err) => {
+    // navigate back to the login page
+  });
 ```
 
 ### Logout
 
 ```ts
-client.Logout().then(() => {
-  // navigate back to the login page
-});
+await client.Logout();
+// navigate back to the login page
 ```
