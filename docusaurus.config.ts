@@ -119,15 +119,23 @@ const config: Config = {
           ],
         },
         {
-          title: "Social",
+          title: "Contact",
           items: [
             {
-              label: "GitHub",
-              href: "https://github.com/lil5",
+              label: "Github Discussions",
+              href: "https://github.com/orgs/stupidwebauthn/discussions",
             },
             {
-              label: "Mastodon",
-              href: "https://fosstodon.org/@lil5",
+              label: "Auth Server Issues",
+              href: "https://github.com/stupidwebauthn/server/issues",
+            },
+            {
+              label: "Client NPM Issues",
+              href: "https://github.com/stupidwebauthn/client/issues",
+            },
+            {
+              label: "Example Issues",
+              href: "https://github.com/stupidwebauthn/example/issues",
             },
           ],
         },
