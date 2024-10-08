@@ -10,6 +10,8 @@ npm install stupidwebauthn-client
 
 ## Code instructions
 
+Add this as a global constant, available for use in any of your frontend's components.
+
 ```ts
 const client = new StupidWebauthnClient();
 ```
@@ -34,19 +36,20 @@ Run on opening at the validation link:
 import queryString from "query-string";
 
 const params = queryString.parse(location.search) as { c?: string };
-// check if step 3
+// check if token is add to the url
 if (!params.c) throw "Invalid email verification url provided";
 // validating email
-await client.Register2EmailValidate(params.c);
+await client.Register2EmailVerify(params.c);
 // email registered successfully
+// creates an `swa_auth` cookie
 ```
 
 ### Register passkey
 
 ```ts
 const res1 = await client.Register3PasskeyChallenge();
-const res2 = await client.Register4AuthorizePasskey(res1.challenge);
-await client.Register5PasskeyValidate(res2);
+const res2 = await client.Register4PasskeyRegister(res1);
+await client.Register5PasskeyVerify(res2);
 // passkey authenticated
 ```
 
@@ -62,32 +65,16 @@ On form submission:
 
 ```ts
 const email = e.target.email.value;
-const res = await client.Login1Challenge(email);
-// save these elsewhere
-const challenge: string = res.challenge;
-// list the credentials for the user to select
-const credentials: CredentialSelect[] = res.credentials;
-```
-
-```jsx
-<select>
-  {credentials.map((credential) => (
-    <option key={credential.id} value={credential.id}>
-      {credential.name}
-    </option>
-  ))}
-</select>
-```
-
-On credential selection:
-
-```ts
-const res = await client.Login2Authenticate(challenge.challenge, credentials);
-await client.Login3Validate(res, credential.challenge.id);
+const res1 = await client.Login1Challenge(email);
+const res2 = await client.Login2Authenticate(res1);
+await client.Login3Verify(res2);
 // authenticated
+// creates an `swa_auth` cookie
 ```
 
 ### Authentication
+
+Check if the `swa_auth` cookie is valid
 
 ```ts
 client
@@ -100,9 +87,58 @@ client
   });
 ```
 
+### Authentication with csrf blocking
+
+```ts
+await client.AuthCsrfChallenge();
+
+// Or any api call that uses the csrf validate middleware
+await client.AuthCsrfValidate();
+```
+
+### Double Validation
+
+```ts
+// assuming that the client is authenticated
+const res1 = await client.AuthDoubleCheck1Challenge();
+const res2 = await client.AuthDoubleCheck2Authenticate(res1);
+await client.AuthDoubleCheckVerify(res2);
+// creates an `swa_doublecheck_auth` cookie that is valid for a minute
+// Now make a request to your server which requires an extra check to validate
+```
+
 ### Logout
 
 ```ts
 await client.Logout();
-// navigate back to the login page
+// Navigate back to the login page
+```
+
+### Passkey invalidation
+
+```ts
+// Removes all passkeys, invalidates all session cookies and logs out
+await AuthDoubleCheck123();
+await AuthPanic();
+
+// Removes current passkey and logs out
+const res1 = await AuthDoubleCheck1Challenge();
+const res2 = await AuthDoubleCheck2Authenticate(res1);
+await AuthDeletePasskey3(res3);
+```
+
+### GDPR Request
+
+```ts
+// Data Request
+await AuthDoubleCheck123();
+await GdprData();
+
+// Data Deletion Request (will delete the account after 30 days)
+await AuthDoubleCheck123();
+await GdprDeleteSet();
+
+// Retract Deletion Request
+await AuthDoubleCheck123();
+await GdprDeleteUnset();
 ```

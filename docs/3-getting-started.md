@@ -19,7 +19,7 @@ docker compose up
 
 Open http://localhost:5178/ and the test mail server http://localhost:8025/
 
-:::info
+:::warning
 
 Opening on http://127.0.0.1:5178/ is not supported, it must be on the correct domain
 

@@ -10,6 +10,12 @@ I found many alternative use Passkeys as a 2nd factor authentication on top of p
 
 ## How would users interact with this?
 
+:::info
+
+While Stupid Webauthn handles the authentication, it does not handle authorization (user&nbsp;roles), this is instead left to your server to handle.
+
+:::
+
 ### Registration
 
 ```mermaid
@@ -53,6 +59,8 @@ sequenceDiagram
 
 ### Your server authorization
 
+#### Webpage authentication
+
 ```mermaid
 sequenceDiagram
     participant B as Web Browser
@@ -67,4 +75,41 @@ sequenceDiagram
     S-->>B: Restricted page is granted or not depending on<br/>the account role
 ```
 
-While Stupid Webauthn handles the authentication, it does not handle authorization, this is instead left to your server to handle.
+#### Api call authentication with csrf
+
+```mermaid
+sequenceDiagram
+    participant B as Web Browser
+    participant N as StupidWebauthn Server
+    participant S as Your Server
+
+    Note over B, N: User is already logged in with auth JWT
+    B->>N: Client requests a csrf token
+    N-->>B: Receives a csrf cookie (valid for 15s)
+    B->>S: Client send an api request
+    S-->>N: Checks if the auth JWT is valid<br/>& if the csrf token is valid
+    N->>S: User details (email)
+    Note over S: Api request is granted
+    S-->>B: Api response
+```
+
+#### Api call authentication with passkey check
+
+```mermaid
+sequenceDiagram
+    participant B as Web Browser
+    participant N as StupidWebauthn Server
+    participant S as Your Server
+
+    Note over B, N: User is already logged in with auth JWT
+    N-->>B: Trigger the registration in browser
+    Note over B: Uses a passkey with Windows Hello,<br/>FaceID or Fingerprint sensor
+    B->>N: Verifying the passkey credentials
+    N-->>B: Receives a passkey double-check cookie (valid for 2min)
+
+    B->>S: Client send an api request
+    S-->>N: Checks if the auth JWT is valid<br/>& if the double-check token is valid
+    N->>S: User details (email)
+    Note over S: Api request is granted
+    S-->>B: Api response
+```
