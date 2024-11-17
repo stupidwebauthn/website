@@ -116,6 +116,10 @@ const config: Config = {
               label: "Blog",
               to: "/blog",
             },
+            {
+              label: "Blog RSS",
+              to: "/blog/rss",
+            },
           ],
         },
         {
