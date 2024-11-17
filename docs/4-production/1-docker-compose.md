@@ -6,7 +6,7 @@ Here's an example of how to add the Stupid Webauthn Service to your vps.
 name: stupidwebauthn
 services:
   auth:
-    image: ghcr.io/stupidwebauthn/server:latest
+    image: ghcr.io/stupidwebauthn/server:v1.8.8
     ports:
       - 127.0.0.1:3000:3000
     restart: unless-stopped

@@ -12,7 +12,7 @@ Run this in your vps.
 
 ```sh
 # Git clone
-git clone --branch v0.1.7 --depth 1 https://github.com/stupidwebauthn/server.git stupidwebauthn
+git clone --branch v1.8.8 --depth 1 https://github.com/stupidwebauthn/server.git stupidwebauthn
 cd stupidwebauthn
 
 # Install dependencies
